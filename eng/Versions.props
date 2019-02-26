@@ -142,6 +142,9 @@
     <SystemComponentModelPackageVersion>4.3.0</SystemComponentModelPackageVersion>
     <SystemNetHttpPackageVersion>4.3.2</SystemNetHttpPackageVersion>
     <SystemThreadingTasksExtensionsPackageVersion>4.5.2</SystemThreadingTasksExtensionsPackageVersion>
+
+    <!-- CoreFxLab -->
+    <SystemTextJsonLabSerializationPackageVersion>0.1.1-e190223-1</SystemTextJsonLabSerializationPackageVersion>
     <!-- Packages developed by @aspnet, but manually updated as necessary. -->
     <LibuvPackageVersion>1.10.0</LibuvPackageVersion>
     <MicrosoftAspNetWebApiClientPackageVersion>5.2.6</MicrosoftAspNetWebApiClientPackageVersion>

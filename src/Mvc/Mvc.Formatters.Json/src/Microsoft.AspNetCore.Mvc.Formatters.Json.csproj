@@ -10,5 +10,6 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Mvc.Core" />
+    <Reference Include="System.Text.JsonLab.Serialization" />
   </ItemGroup>
 </Project>

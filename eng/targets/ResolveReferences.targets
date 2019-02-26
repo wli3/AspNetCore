@@ -80,6 +80,7 @@
       Include="@(Reference)"
       Exclude="
         Newtonsoft.Json;
+        System.Text.JsonLab.Serialization;
         @(AspNetCoreAppReference);
         @(AspNetCoreAppReferenceAndPackage);
         @(ExternalAspNetCoreAppReference);
