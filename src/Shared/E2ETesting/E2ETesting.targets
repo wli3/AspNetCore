@@ -1,0 +1,77 @@
+<Project>
+  <!-- Version of this SDK is set in global.json -->
+  <Sdk Name="Yarn.MSBuild" />
+
+  <!-- Ensuring that everything is ready before build -->
+
+  <Target Name="EnsureNodeJSRestored" BeforeTargets="Build">
+    <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
+    <Yarn Command="install" />
+  </Target>
+
+  <!-- Running prerequisites -->
+
+  <Target Name="EnsurePrerequisites" BeforeTargets="EnsureNodeJSRestored">
+    <PropertyGroup>
+      <_PackageJson>$(MSBuildProjectDirectory)\package.json</_PackageJson>
+    </PropertyGroup>
+
+    <!-- JAVA -->
+    <Message Importance="High" Text="Ensuring JAVA is available" />
+    <Exec Command="java --version" />
+    <Message Importance="High" Text="JAVA is available on the PATH" />
+
+    <!-- package.json -->
+    <Error Condition="!Exists('$(_PackageJson)')" Text="Can't find $(_PackageJson)" />
+    <ReadLinesFromFile File="$(_PackageJson)">
+      <Output TaskParameter="Lines" ItemName="_PackageJsonLines" />
+    </ReadLinesFromFile>
+
+    <PropertyGroup>
+      <_PackageJsonLinesContent>@(_PackageJsonLines)</_PackageJsonLinesContent>
+      <_PackageJsonSeleniumPackage>&quot;selenium-standalone&quot;: &quot;^6.15.4&quot;</_PackageJsonSeleniumPackage>
+    </PropertyGroup>
+
+    <Error
+      Condition="!$(_PackageJsonLinesContent.Contains ('$(_PackageJsonSeleniumPackage)'))"
+      Text="Can't find dependency $(_PackageJsonSeleniumPackage) in '$(_PackageJson)'" />
+  </Target>
+
+  <Target Name="_ResolveTestProjectReferences" DependsOnTargets="ResolveReferences">
+      <PropertyGroup>
+        <_DefaultProjectRoot>$([System.IO.Path]::GetFullPath($(_DefaultProjectFilter)))</_DefaultProjectRoot>
+      </PropertyGroup>
+      <ItemGroup>
+        <_ContentRootProjectReferencesUnfiltered
+          Include="@(ReferencePath)"
+          Condition="'%(ReferencePath.ReferenceSourceTarget)' == 'ProjectReference'" />
+        <_ContentRootProjectReferencesFilter
+          Include="@(_ContentRootProjectReferencesUnfiltered->StartsWith('$(_DefaultProjectRoot)'))" />
+        <_ContentRootProjectReferences
+          Include="@(_ContentRootProjectReferencesFilter)"
+          Condition="'%(Identity)' == 'True'" />
+      </ItemGroup>
+    </Target>
+
+  <Target Name="_AddMetadataAttributes" BeforeTargets="BeforeCompile" DependsOnTargets="_ResolveTestProjectReferences">
+    <ItemGroup>
+      <_ContentRootMetadata
+        Condition="'%(_ContentRootProjectReferences.Identity)' != ''"
+        Include="%(_ContentRootProjectReferences.Identity)"
+        AssemblyName="%(_ContentRootProjectReferences.FusionName)"
+        ContentRootPath="$([System.IO.Path]::GetDirectoryName(%(_ContentRootProjectReferences.MSBuildSourceProjectFile)))"
+        ContentRootTest="$([System.IO.Path]::GetFileName(%(_ContentRootProjectReferences.MSBuildSourceProjectFile)))"
+        Priority="0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AssemblyAttribute
+        Condition=" '%(_ContentRootMetadata.Identity)' != '' "
+        Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>TestAssemblyApplication[%(_ContentRootMetadata.AssemblyName)]</_Parameter1>
+        <_Parameter2>%(_ContentRootMetadata.ContentRootPath)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
+</Project>
