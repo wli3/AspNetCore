@@ -37,6 +37,8 @@
       Text="Can't find dependency $(_PackageJsonSeleniumPackage) in '$(_PackageJson)'" />
   </Target>
 
+  <!-- Resolve content roots at build time -->
+
   <Target Name="_ResolveTestProjectReferences" DependsOnTargets="ResolveReferences">
       <PropertyGroup>
         <_DefaultProjectRoot>$([System.IO.Path]::GetFullPath($(_DefaultProjectFilter)))</_DefaultProjectRoot>
