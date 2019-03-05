@@ -21,6 +21,12 @@
     <Reference Include="Microsoft.Extensions.CommandLineUtils.Sources" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="targets/*.props;targets/*.targets" Pack="true">
+      <PackagePath>build/netstandard1.0/%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+    </None>
+  </ItemGroup>
+
   <!--
     Temporarily use hand-authored .nuspec file until we can use <FrameworkReference>
     The hand-authored .nuspec file is to ensure it *doesn't* reference the shared
@@ -30,7 +36,12 @@
 
   <Target Name="PrepareNuSpecProperties" BeforeTargets="_IntermediatePack">
     <!-- Also temporarily generate the runtimeconfig.json manually until we can use <FrameworkReference> -->
-    <Sdk_GenerateFileFromTemplate TemplateFile="temporaryruntimeconfig.json" Properties="$(NuspecProperties)" OutputPath="$(PublishDir)temporaryruntimeconfig.out.json">
+      <PropertyGroup>
+      <NuspecProperties>
+        sharedfxversion=$(SharedFxVersion);
+      </NuspecProperties>
+    </PropertyGroup>
+    <Sdk_GenerateFileFromTemplate TemplateFile="temporaryruntimeconfig.json" Properties="$(NuspecProperties)" OutputPath="$(BaseIntermediateOutputPath)/out/dotnet-blazor.runtimeconfig.json">
     </Sdk_GenerateFileFromTemplate>
   </Target>
 
@@ -43,7 +54,7 @@
   <Target Name="PackPublish" BeforeTargets="_IntermediatePack">
     <ItemGroup>
       <_GeneratedFiles Include="$(PublishDepsFilePath)"/>
-      <_GeneratedFiles Include="$(PublishRuntimeConfigFilePath)"/>
+      <_GeneratedFiles Include="$(BaseIntermediateOutputPath)/out/dotnet-blazor.runtimeconfig.json"/>
     </ItemGroup>
 
     <ItemGroup>
