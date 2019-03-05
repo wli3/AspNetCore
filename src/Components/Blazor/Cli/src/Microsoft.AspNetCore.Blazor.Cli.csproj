@@ -41,31 +41,31 @@
         sharedfxversion=$(SharedFxVersion);
       </NuspecProperties>
     </PropertyGroup>
-    <Sdk_GenerateFileFromTemplate TemplateFile="temporaryruntimeconfig.json" Properties="$(NuspecProperties)" OutputPath="$(BaseIntermediateOutputPath)/out/dotnet-blazor.runtimeconfig.json">
+    <Sdk_GenerateFileFromTemplate TemplateFile="temporaryruntimeconfig.json" Properties="$(NuspecProperties)" OutputPath="$(OutDir)temporaryruntimeconfig.out.json">
     </Sdk_GenerateFileFromTemplate>
   </Target>
 
   <PropertyGroup>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);Publish;PackPublish</TargetsForTfmSpecificContentInPackage>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <NuspecFile>Microsoft.AspNetCore.Blazor.Cli.nuspec</NuspecFile>
+    <IntermediatePackDir>obj\publish\</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
-  <Target Name="PackPublish" BeforeTargets="_IntermediatePack">
+  <!-- Executes /t:Publish for all target frameworks before packing-->
+  <Target Name="PublishAll" BeforeTargets="_IntermediatePack">
+    <PropertyGroup>
+      <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+      <NuspecProperties>
+      outdir=$(OutDir);
+      blazorversion=$(PackageVersion);
+      publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)));
+      repositorycommit=$(SourceRevisionId);</NuspecProperties>
+    </PropertyGroup>
     <ItemGroup>
-      <_GeneratedFiles Include="$(PublishDepsFilePath)"/>
-      <_GeneratedFiles Include="$(BaseIntermediateOutputPath)/out/dotnet-blazor.runtimeconfig.json"/>
+      <_TargetFramework Include="$(TargetFramework)" />
     </ItemGroup>
-
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="@(_GeneratedFiles)">
-        <PackagePath>tools/%(_GeneratedFiles.RecursiveDir)%(_GeneratedFiles.Filename)%(_GeneratedFiles.Extension)</PackagePath>
-      </TfmSpecificPackageFile>
-
-      <TfmSpecificPackageFile Include="@(ResolvedFileToPublish->'$([MSBuild]::NormalizeDirectory($(PublishDir)))%(RelativePath)')">
-        <PackagePath>tools/%(ResolvedFileToPublish.RelativePath)</PackagePath>
-      </TfmSpecificPackageFile>
-    </ItemGroup>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
   </Target>
 
 </Project>

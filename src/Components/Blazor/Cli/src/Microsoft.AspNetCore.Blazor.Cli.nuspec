@@ -16,17 +16,10 @@ This package was built from the source code at https://github.com/aspnet/AspNetC
     <tags>aspnetcore components</tags>
     <serviceable>true</serviceable>
     <repository type="git" url="https://github.com/aspnet/AspNetCore" commit="$repositorycommit$" />
-    <dependencies>
-      <group targetFramework=".NETCoreApp3.0">
-        <dependency id="Microsoft.AspNetCore.Blazor.Server" version="$blazorversion$" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.AspNetCore.Components.Server" version="$aspnetcoreversion$" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.AspNetCore.SpaServices.Extensions" version="$aspnetcoreversion$" exclude="Build,Analyzers" />
-      </group>
-    </dependencies>
   </metadata>
   <files>
-    <file src="$outdir$temporaryruntimeconfig.out.json" target="lib\netcoreapp3.0\dotnet-blazor.runtimeconfig.json" />
-    <file src="$outdir$dotnet-blazor.dll" target="lib\netcoreapp3.0\dotnet-blazor.dll" />
-    <file src="$componentsrootdir$THIRD-PARTY-NOTICES.txt" target=".\THIRD-PARTY-NOTICES.txt" />
+    <file src="build\**" target="build" />
+    <file src="$publishdir$netcoreapp3.0\**\*" target="tools/" />
+    <file src="$outdir$temporaryruntimeconfig.out.json" target="tools/dotnet-blazor.runtimeconfig.json" />
   </files>
 </package>
