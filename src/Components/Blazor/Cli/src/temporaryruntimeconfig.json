@@ -4,6 +4,7 @@
     "framework": {
       "name": "Microsoft.AspNetCore.App",
       "version": "${sharedfxversion}"
-    }
+    },
+    "rollForwardOnNoCandidateFx": 2
   }
 }
