@@ -1,7 +1,6 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Testing.xunit;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -15,8 +14,8 @@ namespace Templates.Test
 
         [Theory]
         [InlineData(null)]
-        [InlineData("F#", Skip = "https://github.com/aspnet/Templating/issues/673")]
-        private void MvcTemplate_NoAuthImpl(string languageOverride)
+        [InlineData("F#")]
+        public void MvcTemplate_NoAuthImpl(string languageOverride)
         {
             RunDotNetNew("mvc", language: languageOverride);
 

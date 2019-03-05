@@ -1,9 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.Extensions.CommandLineUtils;
 using OpenQA.Selenium;
-using System.IO;
 using System.Net;
 using Templates.Test.Helpers;
 using Templates.Test.Infrastructure;

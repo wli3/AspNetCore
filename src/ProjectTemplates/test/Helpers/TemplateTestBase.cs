@@ -28,7 +28,12 @@ namespace Templates.Test
         public TemplateTestBase(ITestOutputHelper output)
         {
             _output.Value = output;
-            TemplatePackageInstaller.EnsureTemplatingEngineInitialized(output);
+            SetupTemplate();
+        }
+
+        protected void SetupTemplate()
+        {
+            TemplatePackageInstaller.EnsureTemplatingEngineInitialized(_output.Value);
 
             ProjectGuid = Guid.NewGuid().ToString("N").Substring(0, 6);
             ProjectName = $"AspNet.Template.{ProjectGuid}";

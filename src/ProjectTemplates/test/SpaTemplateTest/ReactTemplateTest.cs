@@ -5,7 +5,6 @@ using Templates.Test.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
 
-[assembly: AssemblyFixture(typeof(SeleniumServerFixture))]
 namespace Templates.Test.SpaTemplateTest
 {
     public class ReactTemplateTest : SpaTemplateTestBase
@@ -14,8 +13,10 @@ namespace Templates.Test.SpaTemplateTest
         {
         }
 
-        [Fact(Skip="This test is flaky. Using https://github.com/aspnet/AspNetCore-Internal/issues/1745 to track re-enabling this.")]
+        [Fact]
         public void ReactTemplate_Works_NetCore()
-            => SpaTemplateImpl("react");
+        {
+            SpaTemplateImpl("react");
+        }
     }
 }

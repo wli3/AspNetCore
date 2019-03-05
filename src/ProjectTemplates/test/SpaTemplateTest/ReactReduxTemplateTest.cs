@@ -5,7 +5,6 @@ using Templates.Test.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
 
-[assembly: AssemblyFixture(typeof(SeleniumServerFixture))]
 namespace Templates.Test.SpaTemplateTest
 {
     public class ReactReduxTemplateTest : SpaTemplateTestBase
@@ -14,7 +13,7 @@ namespace Templates.Test.SpaTemplateTest
         {
         }
 
-        [Fact(Skip = "https://github.com/aspnet/AspNetCore/issues/7377")]
+        [Fact]
         public void ReactReduxTemplate_Works_NetCore()
             => SpaTemplateImpl("reactredux");
     }

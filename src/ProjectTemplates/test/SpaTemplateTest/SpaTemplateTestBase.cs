@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using OpenQA.Selenium;
@@ -27,22 +27,27 @@ namespace Templates.Test.SpaTemplateTest
         // so they can be run in parallel. Xunit doesn't parallelize within a test class.
         protected void SpaTemplateImpl(string template, bool noHttps = false)
         {
-            RunDotNetNew(template, noHttps: noHttps);
+            for (int i = 0; i < 10; i++)
+            {
+                RunDotNetNew(template, noHttps: noHttps);
 
-            // For some SPA templates, the NPM root directory is './ClientApp'. In other
-            // templates it's at the project root. Strictly speaking we shouldn't have
-            // to do the NPM restore in tests because it should happen automatically at
-            // build time, but by doing it up front we can avoid having multiple NPM
-            // installs run concurrently which otherwise causes errors when tests run
-            // in parallel.
-            var clientAppSubdirPath = Path.Combine(TemplateOutputDir, "ClientApp");
-            Assert.True(File.Exists(Path.Combine(clientAppSubdirPath, "package.json")), "Missing a package.json");
+                // For some SPA templates, the NPM root directory is './ClientApp'. In other
+                // templates it's at the project root. Strictly speaking we shouldn't have
+                // to do the NPM restore in tests because it should happen automatically at
+                // build time, but by doing it up front we can avoid having multiple NPM
+                // installs run concurrently which otherwise causes errors when tests run
+                // in parallel.
+                var clientAppSubdirPath = Path.Combine(TemplateOutputDir, "ClientApp");
+                Assert.True(File.Exists(Path.Combine(clientAppSubdirPath, "package.json")), "Missing a package.json");
 
-            Npm.RestoreWithRetry(Output, clientAppSubdirPath);
-            Npm.Test(Output, clientAppSubdirPath);
+                Npm.RestoreWithRetry(Output, clientAppSubdirPath);
+                Npm.Test(Output, clientAppSubdirPath);
 
-            TestApplication(publish: false);
-            TestApplication(publish: true);
+                TestApplication(publish: false);
+                TestApplication(publish: true);
+
+                SetupTemplate();
+            }
         }
 
         private void TestApplication(bool publish)
